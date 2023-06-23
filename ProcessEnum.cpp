@@ -3,20 +3,28 @@
 #include <iostream>
 #include <algorithm>
 #include <tchar.h>
+#include <regex>
 
 // Declare functions
 int processFinder(const std::string &proc);
 int StringCompare(std::string, std::string);
-int createProc(TCHAR*);
+int newprocess(TCHAR *proc);
 
 
 // Main
 int main( int argc, char* argv[] )
 {
     if (argc != 2) 
-    {
-        std::cerr << "[-] SYNTAX ERROR: " << argv[0] << " <PROCESS NAME>" << std::endl;
+    {   
+        std::string s = argv[0];
+        std::regex e ("[^\\\\]+$");
+        std::smatch m;
+        std::regex_search (s, m, e);
 
+        for (auto x : m)
+            {
+            std::cerr << "[-] SYNTAX ERROR: .\\" << x << " <PROCESS NAME>" << std::endl;
+            }
         return 1;
     }
 
@@ -24,7 +32,7 @@ int main( int argc, char* argv[] )
 
     if (pid == 1)
     {
-        pid = createProc(argv[1]);
+        pid = newprocess(argv[1]);
     }
 
     std::cout << "[+] PROCESS ID: " << pid << std::endl;
@@ -112,10 +120,10 @@ BOOL StringCompare(std::string s1, std::string s2)
 }
 
 
-int createProc(TCHAR *proc)     
+int newprocess(TCHAR *proc)
 {
     /*
-    BOOL CreateProcess(
+    BOOL CreateProcessW(
             [in, optional]      LPCSTR                lpApplicationName,
             [in, out, optional] LPSTR                 lpCommandLine,
             [in, optional]      LPSECURITY_ATTRIBUTES lpProcessAttributes,
@@ -127,7 +135,7 @@ int createProc(TCHAR *proc)
             [in]                LPSTARTUPINFOA        lpStartupInfo,
             [out]               LPPROCESS_INFORMATION lpProcessInformation
             );
-*/
+    */
 
     STARTUPINFO si;              
     PROCESS_INFORMATION pi;
@@ -149,7 +157,7 @@ int createProc(TCHAR *proc)
         NULL,
         &si,
         &pi
-    )) 
+        )) 
     {
         std::cout << "[-] FAILED TO CREATE PROCESS!" << std::endl;
         exit(0);
@@ -159,4 +167,3 @@ int createProc(TCHAR *proc)
 
     return pi.dwProcessId;
 }
-
