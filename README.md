@@ -24,5 +24,3 @@ C:\Users\%user\Documents\> .\ProcessEnum.exe notepad.exe
 
 ### Extra Tidbit
 I am still developing this script out for future use in system enumeration and future Process/DLL Injection labs.
-
-Currently trying to get the CREATE_NO_WINDOW flag to work properly.
